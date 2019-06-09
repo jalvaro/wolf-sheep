@@ -4,6 +4,8 @@ from mesa import Agent
 
 from wolf_sheep.random_walk import RandomWalker
 
+YEAR = 12
+MAX_LIVED_YEARS = 20 * YEAR
 
 class Sheep(RandomWalker):
     '''
@@ -17,12 +19,14 @@ class Sheep(RandomWalker):
     def __init__(self, pos, model, moore, energy=None):
         super().__init__(pos, model, moore=moore)
         self.energy = energy
+        self.age = 0
 
     def step(self):
         '''
         A model step. Move, then eat grass and reproduce.
         '''
         self.random_move()
+        self.age += 1
         living = True
 
         if self.model.grass:
@@ -38,12 +42,12 @@ class Sheep(RandomWalker):
                 grass_patch.fully_grown = False
 
             # Death
-            if self.energy < 0:
+            if self.energy < 0 or self.age > MAX_LIVED_YEARS:
                 self.model.grid._remove_agent(self.pos, self)
                 self.model.schedule.remove(self)
                 living = False
 
-        if living and random.random() < self.model.sheep_reproduce:
+        if living and random.random() < self.model.sheep_reproduce and self.age > YEAR:
             # Create a new sheep:
             if self.model.grass:
                 self.energy /= 2
@@ -62,9 +66,11 @@ class Wolf(RandomWalker):
     def __init__(self, pos, model, moore, energy=None):
         super().__init__(pos, model, moore=moore)
         self.energy = energy
+        self.age = 0
 
     def step(self):
         self.random_move()
+        self.age += 1
         self.energy -= 1
 
         # If there are sheep present, eat one
@@ -80,11 +86,11 @@ class Wolf(RandomWalker):
             self.model.schedule.remove(sheep_to_eat)
 
         # Death or reproduction
-        if self.energy < 0:
+        if self.energy < 0 or self.age > MAX_LIVED_YEARS:
             self.model.grid._remove_agent(self.pos, self)
             self.model.schedule.remove(self)
         else:
-            if random.random() < self.model.wolf_reproduce:
+            if random.random() < self.model.wolf_reproduce and self.age > YEAR:
                 # Create a new wolf cub
                 self.energy /= 2
                 cub = Wolf(self.pos, self.model, self.moore, self.energy)

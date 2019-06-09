@@ -45,7 +45,9 @@ def wolf_sheep_portrayal(agent):
 
 canvas_element = CanvasGrid(wolf_sheep_portrayal, 20, 20, 500, 500)
 chart_element = ChartModule([{"Label": "Wolves", "Color": "#AA0000"},
-                             {"Label": "Sheep", "Color": "#666666"}])
+                             {"Label": "Sheeps", "Color": "#666666"},
+                             {"Label": "Wolves average age", "Color": "#AAAA00"},
+                             {"Label": "Sheeps average age", "Color": "#00AAAA"}])
 
 model_params = {"grass": UserSettableParameter('checkbox', 'Grass Enabled', True),
                 "grass_regrowth_time": UserSettableParameter('slider', 'Grass Regrowth Time', 20, 1, 50),

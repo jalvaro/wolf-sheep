@@ -79,7 +79,19 @@ class WolfSheepPredation(Model):
         self.grid = MultiGrid(self.height, self.width, torus=True)
         self.datacollector = DataCollector(
             {"Wolves": lambda m: m.schedule.get_breed_count(Wolf),
-             "Sheep": lambda m: m.schedule.get_breed_count(Sheep)})
+             "Sheeps": lambda m: m.schedule.get_breed_count(Sheep),
+             "Wolves average age": lambda m: m.schedule.get_breed_avg_age(Wolf),
+             "Sheeps average age": lambda m: m.schedule.get_breed_avg_age(Sheep)})
+
+
+        print('Grass enabled & ', grass, ' \\\\')
+        print('Grass Regrowth Time & ', grass_regrowth_time, ' \\\\')
+        print('Initial Sheep Population & ', initial_sheep, ' \\\\')
+        print('Sheep Reproduction Rate & ', sheep_reproduce, ' \\\\')
+        print('Initial Wolf Population & ', initial_wolves, ' \\\\')
+        print('Wolf Reproduction Rate & ', wolf_reproduce, ' \\\\')
+        print('Wolf Gain From Food Rate & ', wolf_gain_from_food, ' \\\\')
+        print('Sheep Gain From Food & ', sheep_gain_from_food, ' \\\\')
 
         # Create sheep:
         for i in range(self.initial_sheep):
